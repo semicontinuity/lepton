@@ -19,12 +19,12 @@ Would it be easier to write something like
 	frame {
 	    title: "layout"
 	    contentPane: vbox {
-	        vbox {
+	        panel {
 	            important_button {text: "text1"}
 	            important_button {text: "text2"}
 	            important_button {text: "text3"}
 	        }
-	        hbox {
+	        panel {
 	            regular_button {text: "text4"}
 	            regular_button {text: "text5"}
 	            regular_button {text: "text6"}
@@ -33,23 +33,23 @@ Would it be easier to write something like
 	}
 
 
-This is one big object literal, describing the whole JFrame.
+This is one big object literal to describe the whole JFrame.
 And it is not necessary to repeat youself. To cut down lines of code, you can define a macro first, like "red_button", and use it immediately.
 
 
-Lepton is a good fit many cases, where xml and json are used nowadays.
+Lepton is a good fit for many cases, where XML and JSON are used nowadays.
 For instance, for configuration files or for network message payload.
 In the example above, the header with internal stuff can be kept inside the program, leaving the clean resource file
 
 	frame {
 	    title: "layout"
 	    contentPane: vbox {
-	        vbox {
+	        panel {
 	            important_button {text: "text1"}
 	            important_button {text: "text2"}
 	            important_button {text: "text3"}
 	        }
-	        hbox {
+	        panel {
 	            regular_button {text: "text4"}
 	            regular_button {text: "text5"}
 	            regular_button {text: "text6"}
@@ -60,7 +60,7 @@ In the example above, the header with internal stuff can be kept inside the prog
 
 
 Why use Lepton, not XML or JSON?
-XML looks ugly. JSON is untyped, what Java object to create? And you have to repeat yourself.
+XML looks ugly. JSON is untyped, what Java objects to create? And you have to repeat yourself.
 
 
 From Java, Lepton literals can be transformed to Java objects with Scripting API, see [an example](https://github.com/semicontinuity/lepton/blob/master/neutrino-samples/src/neutrino/script/SimpleDemo.java)
