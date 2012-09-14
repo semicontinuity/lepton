@@ -1196,6 +1196,14 @@ public class ParserTest {
         Assert.assertEquals(Character.valueOf('b'), b.getValue());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testReadLiteral__annotated_initializer_functionCall__1() throws IOException {
+        final Scanner scanner = new Scanner(new StringReader("factory @(a:1){y:2}"));
+        final Parser parser = new Parser();
+
+        // cannot annotate initializer
+        parser.parseLiteral(scanner);
+    }
 
     // =================================================================================================================
     // complex

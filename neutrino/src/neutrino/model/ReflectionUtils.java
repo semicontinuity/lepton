@@ -51,6 +51,10 @@ public class ReflectionUtils {
         }
     }
 
+    public static String addMethodName(final String fieldName) {
+        return "add" + capitalize (fieldName);
+    }
+
     /** Returns a String which capitalizes the first letter of the string. */
     static String capitalize (String name) {
         if (name == null || name.length () == 0) {

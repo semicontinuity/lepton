@@ -9,10 +9,8 @@ import org.junit.Test;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class ScriptEngine__OL__Test {
 
@@ -398,6 +396,16 @@ public class ScriptEngine__OL__Test {
         Assert.assertTrue(value instanceof Integer);
         Integer integer = (Integer) value;
         Assert.assertSame(10, integer);
+    }
+
+    @Test
+    public void testEval__call__11() throws ScriptException {
+        Object value = engine.eval("<vector:java.util.Vector element:java.lang.Integer> vector {element(1) element(2)}");
+        Assert.assertTrue(value instanceof Vector);
+        Vector list = (Vector) value;
+        Assert.assertEquals(2, list.size());
+        Assert.assertEquals(1, list.get(0));
+        Assert.assertEquals(2, list.get(1));
     }
 
     // =================================================================================================================

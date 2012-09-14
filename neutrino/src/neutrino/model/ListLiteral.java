@@ -30,12 +30,29 @@ public class ListLiteral<ElementType> extends CompositeLiteral<Evaluable<Element
             Evaluable<ElementType> literal = elements.get(i);
             try {
                 final Object child = literal.evaluate(bindings);
-                final Method method = ReflectionUtils.findAddMethod(
-                    "add", object.getClass(), child.getClass());
+                Method method = null;
+                // if the initializer is "function call", e.g. "field(..) {..}",
+                // try to find special addition method for it, like "addField(..)".
+                // If not found, look for generic method "add(...)"
+                if (literal instanceof FunctionCallLiteral) {
+                    final String name = ((FunctionCallLiteral) literal).getReference().getValue();
+                    try {
+                        method = findAddMethod(object, child, ReflectionUtils.addMethodName(name));
+                    }
+                    catch (IllegalStateException e) {
+                        method = null;
+                    }
+                }
+
+                if (method == null) method = findAddMethod(object, child, "add");
                 method.invoke(object, child);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private Method findAddMethod(Object object, Object child, final String methodName) {
+        return ReflectionUtils.findAddMethod(methodName, object.getClass(), child.getClass());
     }
 }
