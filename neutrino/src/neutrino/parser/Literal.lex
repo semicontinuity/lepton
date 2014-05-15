@@ -23,8 +23,6 @@ import static neutrino.parser.LiteralElementTypes.*;
 %{
   StringBuffer string = new StringBuffer();
 
-  int yyline;
-  int yycolumn;
 
   private LiteralElement symbol(LiteralElementTypes type) {
     return new LiteralElement(type, yyline+1, yycolumn+1);
@@ -156,7 +154,7 @@ SingleCharacter = [^\r\n\'\\]
   "-2147483648"                  { return symbol(INTEGER_LITERAL, new Integer(Integer.MIN_VALUE)); }
 
   [+-]?{DecIntegerLiteral}       { return symbol(INTEGER_LITERAL, new Integer(yytext())); }
-  [+-]?{DecLongLiteral}          { return symbol(LONG_LITERAL, new Long(yytext().subSequence(0,yylength()-1))); }
+  [+-]?{DecLongLiteral}          { return symbol(LONG_LITERAL, new Long(yytext().subSequence(0,yylength()-1).toString())); }
 
   {HexIntegerLiteral}            { return symbol(INTEGER_LITERAL, new Integer((int) parseLong(2, yylength(), 16))); }
   {HexLongLiteral}               { return symbol(LONG_LITERAL, new Long(parseLong(2, yylength()-1, 16))); }
@@ -164,9 +162,9 @@ SingleCharacter = [^\r\n\'\\]
   {OctIntegerLiteral}            { return symbol(INTEGER_LITERAL, new Integer((int) parseLong(0, yylength(), 8))); }
   {OctLongLiteral}               { return symbol(LONG_LITERAL, new Long(parseLong(0, yylength()-1, 8))); }
 
-  [+-]?{FloatLiteral}            { return symbol(FLOAT_LITERAL, new Float(yytext().subSequence(0,yylength()-1))); }
-  [+-]?{DoubleLiteral}           { return symbol(DOUBLE_LITERAL, new Double(yytext())); }
-  [+-]?{DoubleLiteral}[dD]       { return symbol(DOUBLE_LITERAL, new Double(yytext().subSequence(0,yylength()-1))); }
+  [+-]?{FloatLiteral}            { return symbol(FLOAT_LITERAL, new Float(yytext().subSequence(0,yylength()-1).toString())); }
+  [+-]?{DoubleLiteral}           { return symbol(DOUBLE_LITERAL, new Double(yytext().toString())); }
+  [+-]?{DoubleLiteral}[dD]       { return symbol(DOUBLE_LITERAL, new Double(yytext().subSequence(0,yylength()-1).toString())); }
 
   /* comments */
   {Comment}                      { /* ignore */ }
@@ -192,7 +190,7 @@ SingleCharacter = [^\r\n\'\\]
   "\\\""                         { string.append( '\"' ); }
   "\\'"                          { string.append( '\'' ); }
   "\\\\"                         { string.append( '\\' ); }
-  \\[0-3]?{OctDigit}?{OctDigit}  { char val = (char) Integer.parseInt(yytext().subSequence(1),8);
+  \\[0-3]?{OctDigit}?{OctDigit}  { char val = (char) Integer.parseInt(yytext().subSequence(1, yylength()).toString(),8);
                         				   string.append( val ); }
 
   /* error cases */
