@@ -112,7 +112,7 @@ Exponent = [eE] [+-]? [0-9]+
 StringCharacter = [^\r\n\"\\]
 SingleCharacter = [^\r\n\'\\]
 
-%state STRING, CHARLITERAL
+%state STRING, MULTI_LINE_STRING, CHARLITERAL
 
 %%
 
@@ -140,6 +140,9 @@ SingleCharacter = [^\r\n\'\\]
   ">"                            { return symbol(GT); }
   "<"                            { return symbol(LT); }
 
+
+  /* multi-string literal */
+  \"\"\"                         { yybegin(MULTI_LINE_STRING); string.setLength(0); }
 
   /* string literal */
   \"                             { yybegin(STRING); string.setLength(0); }
@@ -196,6 +199,17 @@ SingleCharacter = [^\r\n\'\\]
   /* error cases */
   \\.                            { throw new RuntimeException("Illegal escape sequence \""+yytext()+"\""); }
   {LineTerminator}               { throw new RuntimeException("Unterminated string at end of line"); }
+}
+
+<MULTI_LINE_STRING> {
+  \"\"\"                         { yybegin(YYINITIAL); return symbol(STRING_LITERAL, string.toString()); }
+
+  {StringCharacter}+             { string.append( yytext() ); }
+  [\n\r\"\\]                     { string.append( yytext() ); }
+
+  /* TODO escape sequences, octal and unicode */
+  /* error cases */
+  <<EOF>>                        { throw new RuntimeException("Unclosed character literal at end of file"); }
 }
 
 <CHARLITERAL> {
