@@ -408,6 +408,16 @@ public class ScriptEngine__OL__Test {
         Assert.assertEquals(2, list.get(1));
     }
 
+    @Test
+    public void testEval__call__12() throws ScriptException {
+        Object value = engine.eval("<set:java.util.HashSet> set {1 2}");
+        Assert.assertTrue(value instanceof HashSet);
+        HashSet set = (HashSet) value;
+        Assert.assertEquals(2, set.size());
+        Assert.assertTrue(set.contains(1));
+        Assert.assertTrue(set.contains(2));
+    }
+
     // =================================================================================================================
     // Declare and call function
     // =================================================================================================================
