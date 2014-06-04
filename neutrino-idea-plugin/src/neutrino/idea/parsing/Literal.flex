@@ -62,10 +62,14 @@ SingleCharacter = [^\r\n\'\\]
 
 CHARACTER_LITERAL="'"([^\\\'\r\n]|{ESCAPE_SEQUENCE})*("'"|\\)?
 STRING_LITERAL=\"([^\\\"\r\n]|{ESCAPE_SEQUENCE})*(\"|\\)?
+MULTI_LINE_STRING_LITERAL=\"\"\"([^*]|[\r\n])*\"\"\"
 ESCAPE_SEQUENCE=\\[^\r\n]
 
-
-%state IN_STRING, IN_CHAR
+//ANY_ESCAPE_SEQUENCE = \\[^]
+//THREE_QUO = (\"\"\")
+//ONE_TWO_QUO = (\"[^\"]) | (\"\[^]) | (\"\"[^\"]) | (\"\"\[^])
+//QUO_STRING_CHAR = [^\\\"] | {ANY_ESCAPE_SEQUENCE} | {ONE_TWO_QUO}
+//TRIPLE_QUOTED_LITERAL = {THREE_QUO} {QUO_STRING_CHAR}* {THREE_QUO}?
 
 %%
 
@@ -74,8 +78,12 @@ ESCAPE_SEQUENCE=\\[^\r\n]
 // State YYINITIAL
 // =====================================================================================================================
 
+
+//<YYINITIAL> {TRIPLE_QUOTED_LITERAL }{ return neutrino.idea.parsing.LiteralElementTypes.STRING_LITERAL; }
+
 <YYINITIAL> {CHARACTER_LITERAL} { return neutrino.idea.parsing.LiteralElementTypes.CHAR_LITERAL; }
 <YYINITIAL> {STRING_LITERAL} { return neutrino.idea.parsing.LiteralElementTypes.STRING_LITERAL; }
+<YYINITIAL> {MULTI_LINE_STRING_LITERAL} { return neutrino.idea.parsing.LiteralElementTypes.STRING_LITERAL; }
 
 <YYINITIAL> {
 
