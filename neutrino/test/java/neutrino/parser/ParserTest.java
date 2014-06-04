@@ -284,13 +284,13 @@ public class ParserTest {
     }
 
 
-    // TODO: support
+    @Test
     public void testReadLiteral__float__simple__negative() throws IOException {
         final Scanner scanner = new Scanner(new StringReader("-2.0f"));
         final Parser parser = new Parser();
 
         final FloatLiteral value = (FloatLiteral) parser.readLiteral(scanner);
-        Assert.assertEquals(2.0f, value.getValue(), 0);
+        Assert.assertEquals(-2.0f, value.getValue(), 0);
     }
 
     // TODO: more tests for float
